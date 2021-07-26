@@ -15,6 +15,7 @@ const router = require('./src/router')
 const comment = require('./src/router/comment')
 const user = require('./src/router/user')
 const upload = require('./src/router/upload')
+const userLikeRecord = require('./src/router/user_like_record')
 
 app
   // .use(cors({
@@ -35,11 +36,14 @@ app
   .use(user.allowedMethods())
   .use(comment.routes())
   .use(comment.allowedMethods())
+  .use(userLikeRecord.routes())
+  .use(userLikeRecord.allowedMethods())
   .use(upload.routes())
   .use(upload.allowedMethods())
 
-const port = process.env.PORT || 8082
+const port = process.env.PORT || 8088
 
 app.listen(port, () => {
   console.log(`server started on ${port}`)
+  console.log(`http://localhost:${port}`)
 })

@@ -1,7 +1,8 @@
 const mongoose = require('../db')
 const Schema = mongoose.Schema
+// const random = require('string-random')
 
-const ChildrenSchema = new Schema(
+const ChildComment = new Schema(
   {
     userinfo: {
       type: Object,
@@ -11,21 +12,17 @@ const ChildrenSchema = new Schema(
       type: String,
       required: true,
     },
-    thumbNum: {
+    like_status: {
       type: Number,
       default: 0,
     },
-    commNum: {
+    like_number: {
       type: Number,
       default: 0,
     },
-    isThumb: {
-      type: Boolean,
-      default: false,
-    },
-    isDel: {
-      type: Boolean,
-      default: false,
+    del_status: {
+      type: Number,
+      default: 0,
     },
   },
   {
@@ -36,7 +33,7 @@ const ChildrenSchema = new Schema(
   }
 )
 
-const CommentSchema = new Schema(
+const Comment = new Schema(
   {
     userinfo: {
       type: Object,
@@ -46,23 +43,20 @@ const CommentSchema = new Schema(
       type: String,
       required: true,
     },
-    children: [ChildrenSchema],
-    thumbNum: {
+    like_status: {
       type: Number,
       default: 0,
     },
-    commNum: {
+    like_number: {
       type: Number,
       default: 0,
     },
-    isThumb: {
-      type: Boolean,
-      default: false,
+    del_status: {
+      type: Number,
+      default: 0,
     },
-    isDel: {
-      type: Boolean,
-      default: false,
-    },
+    children: [ChildComment],
+    children_count: Number,
   },
   {
     timestamps: {
@@ -72,6 +66,4 @@ const CommentSchema = new Schema(
   }
 )
 
-const Comment = mongoose.model('Comment', CommentSchema, 'Comment')
-
-module.exports = Comment
+module.exports = mongoose.model('Comment', Comment, 'Comment')

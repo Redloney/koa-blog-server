@@ -2,16 +2,16 @@ const koaRouter = require('koa-router')
 const router = new koaRouter()
 
 router
-  .get('/', async ctx => {
+  .get('/', async (ctx) => {
     ctx.body = {
       code: 1,
-      msg: 'API请求成功!'
+      msg: 'API请求成功!',
     }
   })
-  .post('/', async ctx => {
+  .post('/', async (ctx) => {
     ctx.body = {
       code: 1,
-      msg: 'API请求成功!'
+      msg: 'API请求成功!',
     }
   })
 

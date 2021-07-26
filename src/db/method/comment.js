@@ -3,8 +3,8 @@ const Comment = require('../schema/comment')
 // 过滤字段
 const _filter = {
   __v: 0,
-  isDel: 0,
-  'children.isDel': 0,
+  del_status: 0,
+  'children.del_status': 0,
 }
 
 // 初始化字段
@@ -36,7 +36,7 @@ class CommentMethod {
       Comment.find(
         {
           ...obj,
-          isDel: false,
+          del_status: 0,
         },
         _filter
       ).exec((err, res) => {
@@ -56,35 +56,40 @@ class CommentMethod {
     })
   }
 
-  query(obj, keys) {
+  query(match, keys) {
     const {
       page = 0,
       size = 15,
       sorter = 'createdAt_descend',
     } = keys ? keys : initKeys
+
     const sortKey = sorter.split('_')[0]
+
     const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1
+
     return new Promise((resolve, reject) => {
       Comment.aggregate([
         {
           $match: {
-            ...obj,
-            isDel: false,
+            ...match,
+            del_status: 0,
           },
         },
         {
           $project: {
-            content: 1,
             userinfo: 1,
+            content: 1,
+            like_status: 1,
+            like_number: 1,
+            del_status: 1,
             createdAt: 1,
-            thumbNum: 1,
-            commNum: 1,
+            updatedAt: 1,
             children: {
               $filter: {
                 input: '$children',
                 as: 'children',
                 cond: {
-                  $eq: ['$$children.isDel', false],
+                  $eq: ['$$children.del_status', 0],
                 },
               },
             },
@@ -103,7 +108,7 @@ class CommentMethod {
     })
   }
 
-  queryAll(obj, keys) {
+  queryAll(match, keys) {
     return new Promise((resolve, reject) => {
       try {
         const {
@@ -115,7 +120,7 @@ class CommentMethod {
         const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1
         Comment.aggregate([
           {
-            $match: obj,
+            $match: match,
           },
           {
             $project: _filter,
@@ -136,25 +141,25 @@ class CommentMethod {
     })
   }
 
-  create(comm) {
-    try {
-      return new Promise(async (resolve, _reject) => {
-        const comment = new Comment(comm)
-        const result = await comment.save()
-        resolve(result)
-      })
-    } catch (err) {
-      reject(err)
-    }
+  create(comm_info) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const comment = new Comment(comm_info)
+        const new_comm = await comment.save()
+        resolve(new_comm)
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 
   delete(fId, _id) {
     return new Promise(async (resolve, reject) => {
       try {
-        let result =
+        let comm_info =
           fId === _id
             ? await Comment.findByIdAndUpdate(fId, {
-                isDel: true,
+                del_status: 1,
               })
             : await Comment.findOneAndUpdate(
                 {
@@ -167,7 +172,7 @@ class CommentMethod {
                 },
                 {
                   $set: {
-                    'children.$.isDel': true,
+                    'children.$.del_status': 1,
                   },
                 },
                 {
@@ -176,22 +181,22 @@ class CommentMethod {
                   fields: _filter,
                 }
               )
-        resolve(result)
+        resolve(comm_info)
       } catch (err) {
         reject(err)
       }
     })
   }
-
-  update(_id, obj) {
-    try {
-      return new Promise(async (resolve, _reject) => {
+  // 只做评论添加功能
+  update(_id, info) {
+    return new Promise(async (resolve, reject) => {
+      try {
         const comment = await Comment.findByIdAndUpdate(
           _id,
           {
             $push: {
               children: {
-                ...obj,
+                ...info,
               },
             },
           },
@@ -201,12 +206,11 @@ class CommentMethod {
             fields: _filter,
           }
         )
-        console.log(comment)
         resolve(comment)
-      })
-    } catch (err) {
-      reject(err)
-    }
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 }
 

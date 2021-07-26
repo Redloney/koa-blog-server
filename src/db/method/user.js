@@ -1,43 +1,46 @@
-const User = require('../schema/user');
+const User = require('../schema/user')
 
-const _filter = { '__v': 0, 'email': 0 };
+const _filter = { __v: 0, email: 0 }
 
 const initKeys = {
   page: 0,
   size: 15,
-  sorter: 'createdAt_descend'
+  sorter: 'createdAt_descend',
 }
 
 class UserMethod {
   //  根据ID查询用户
-  queryById (_id) {
+  queryById(_id) {
     return new Promise(async (resolve, reject) => {
       try {
         const userinfo = await User.findById(_id)
-        userinfo ? resolve(userinfo) : resolve({});
+        userinfo ? resolve(userinfo) : resolve({})
       } catch (err) {
         reject(err)
       }
     })
   }
   // 查询
-  query (args, keys) {
+  query(args, keys) {
     try {
-      const { page = 0, size = 15, sorter = 'createdAt_descend' } = keys ? keys : initKeys
-      const sortKey = sorter.split('_')[0];
-      const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1;
+      const {
+        page = 0,
+        size = 15,
+        sorter = 'createdAt_descend',
+      } = keys ? keys : initKeys
+      const sortKey = sorter.split('_')[0]
+      const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1
       return new Promise(async (resolve, _reject) => {
-        const users = await User
-          .aggregate([
-            {
-              "$match": args
-            },
-            {
-              "$project": _filter
-            }
-          ])
+        const users = await User.aggregate([
+          {
+            $match: args,
+          },
+          {
+            $project: _filter,
+          },
+        ])
           .sort({
-            [sortKey]: sortVal
+            [sortKey]: sortVal,
           })
           .skip(page * size)
           .limit(size)
@@ -47,7 +50,7 @@ class UserMethod {
       reject(err)
     }
   }
-  count (args) {
+  count(args) {
     try {
       return new Promise(async (resolve, _reject) => {
         const users = await User.find({ ...args }, _filter)
@@ -58,8 +61,8 @@ class UserMethod {
     }
   }
   // 新建
-  save (info = {}) {
-    const user = new User(info);
+  save(info = {}) {
+    const user = new User(info)
     return new Promise(async (resolve, reject) => {
       try {
         const result = await user.save()

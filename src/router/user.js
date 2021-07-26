@@ -101,6 +101,7 @@ router
       ctx.cookies.set('userId', '', { maxAge: 0 })
       ctx.body = {
         code: 1,
+        msg: '注销成功！',
       }
     } catch (error) {
       ctx.cookies.set('userId', '', { maxAge: 0 })

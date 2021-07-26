@@ -23,7 +23,6 @@ const ArticleSchema = new Schema(
       type: Number,
       required: false,
     },
-    comments: {},
     watchNum: {
       type: Number,
       required: false,
