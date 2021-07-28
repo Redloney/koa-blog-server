@@ -1,49 +1,46 @@
-const koa = require('koa')
-const app = new koa()
-
+const Koa = require('koa')
+const Router = require('koa-router')
+const app = new Koa()
+const router = new Router()
 const compose = require('koa-compose')
 const bodyParser = require('koa-bodyparser')
-// const cors = require('koa2-cors')
+
+const { PORT } = require('./src/config')
 
 // 静态文件夹 www
 const path = require('path')
 const static = require('koa-static')
 const staticPath = static(path.join(__dirname, './www'))
 const middlewares = compose([bodyParser(), staticPath])
-// 路由 router
-const router = require('./src/router')
-const comment = require('./src/router/comment')
-const user = require('./src/router/user')
-const upload = require('./src/router/upload')
-const userLikeRecord = require('./src/router/user_like_record')
+
+// router config
+const routers = require('./src/router')
+// jwt config
+const jwtDeploy = require('./src/utils/jwt')
 
 app
-  // .use(cors({
-  //   origin: ctx => {
-  //     return 'https://www.redloney.cn'
-  //   },
-  //   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-  //   maxAge: 5,
-  //   credentials: true,
-  //   allowMethods: ['GET', 'POST', 'DELETE'],
-  //   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  // }))
   .use(staticPath)
   .use(middlewares)
   .use(router.routes())
   .use(router.allowedMethods())
-  .use(user.routes())
-  .use(user.allowedMethods())
-  .use(comment.routes())
-  .use(comment.allowedMethods())
-  .use(userLikeRecord.routes())
-  .use(userLikeRecord.allowedMethods())
-  .use(upload.routes())
-  .use(upload.allowedMethods())
 
-const port = process.env.PORT || 8088
+routers.depoly(app)
+jwtDeploy.deploy(app)
 
-app.listen(port, () => {
-  console.log(`server started on ${port}`)
-  console.log(`http://localhost:${port}`)
+router.get('/', (ctx) => {
+  ctx.body = {
+    code: 1,
+    msg: 'API请求成功!',
+  }
+})
+router.post('/', (ctx) => {
+  ctx.body = {
+    code: 1,
+    msg: 'API请求成功!',
+  }
+})
+
+app.listen(PORT, () => {
+  console.log(`server started on ${PORT}`)
+  console.log(`http://localhost:${PORT}`)
 })

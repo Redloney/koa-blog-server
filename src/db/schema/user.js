@@ -1,7 +1,6 @@
 const mongoose = require('../db')
-const Schema = mongoose.Schema
 
-const UserSchema = new Schema(
+const UserSchema = new mongoose.Schema(
   {
     avatar: {
       type: String,
@@ -10,6 +9,7 @@ const UserSchema = new Schema(
     nickname: {
       type: String,
       required: true,
+      unique: true,
     },
     email: {
       type: String,

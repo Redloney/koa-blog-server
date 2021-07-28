@@ -1,18 +1,23 @@
-const koaRouter = require('koa-router')
-const router = new koaRouter()
+// const comment = require('./comment')
+// const user = require('./user')
+// const auth = require('./auth')
+// const upload = require('./upload')
+// const userLikeRecord = require('./user_like_record')
 
-router
-  .get('/', async (ctx) => {
-    ctx.body = {
-      code: 1,
-      msg: 'API请求成功!',
-    }
-  })
-  .post('/', async (ctx) => {
-    ctx.body = {
-      code: 1,
-      msg: 'API请求成功!',
-    }
-  })
+const routers = [
+  require('./comment'),
+  require('./user'),
+  require('./auth'),
+  require('./upload'),
+  require('./user_like_record'),
+]
+class Router {
+  depoly(app) {
+    routers.forEach((route) => {
+      app.use(route.routes())
+      app.use(route.allowedMethods())
+    })
+  }
+}
 
-module.exports = router
+module.exports = new Router()

@@ -43,7 +43,7 @@ router
     }
   })
   // 用户登录
-  .post('/api/user/login', async (ctx) => {
+  .post('/api/user/login22', async (ctx) => {
     try {
       const { avatar, nickname, gender, email, weburl, address } =
         ctx.request.body

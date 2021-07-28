@@ -1,9 +1,10 @@
 const Router = require('koa-router')
 const multer = require('koa-multer')
 const { join } = require('path')
+const { COPYFILE_EXCL } = require('constants')
 
 // 静态资源仓库链接地址
-const serverip = 'http://localhost:8082/uploads/'
+const serverip = 'http://localhost:8088/uploads/'
 
 const router = new Router()
 
@@ -26,6 +27,20 @@ const limits = {
 }
 
 const upload = multer({ storage, limits })
+
+router.get('/api/upload', async (ctx) => {
+  try {
+    ctx.body = {
+      code: 1,
+      msg: '此接口为上传接口！请您使用POST请求~',
+    }
+  } catch (err) {
+    ctx.body = {
+      code: 0,
+      err,
+    }
+  }
+})
 
 router.post('/api/upload', async (ctx) => {
   try {

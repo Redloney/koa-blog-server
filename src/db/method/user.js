@@ -20,17 +20,27 @@ class UserMethod {
       }
     })
   }
+  queryOne(obj) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await User.findOne(obj, _filter)
+        resolve(user)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
   // 查询
   query(args, keys) {
-    try {
-      const {
-        page = 0,
-        size = 15,
-        sorter = 'createdAt_descend',
-      } = keys ? keys : initKeys
-      const sortKey = sorter.split('_')[0]
-      const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1
-      return new Promise(async (resolve, _reject) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const {
+          page = 0,
+          size = 15,
+          sorter = 'createdAt_descend',
+        } = keys ? keys : initKeys
+        const sortKey = sorter.split('_')[0]
+        const sortVal = sorter.split('_')[1] === 'ascend' ? 1 : -1
         const users = await User.aggregate([
           {
             $match: args,
@@ -45,20 +55,20 @@ class UserMethod {
           .skip(page * size)
           .limit(size)
         users && users.length > 0 ? resolve(users) : resolve([])
-      })
-    } catch (err) {
-      reject(err)
-    }
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
-  count(args) {
-    try {
-      return new Promise(async (resolve, _reject) => {
-        const users = await User.find({ ...args }, _filter)
+  count(obj) {
+    return new Promise(async (resolve, _reject) => {
+      try {
+        const users = await User.find({ ...obj }, _filter)
         users && users.length ? resolve(users.length) : resolve(0)
-      })
-    } catch (err) {
-      reject(err)
-    }
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
   // 新建
   save(info = {}) {
