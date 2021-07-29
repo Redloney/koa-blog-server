@@ -5,6 +5,6 @@ module.exports = cors({
   maxAge: 5,
   credentials: true,
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-  allowMethods: ['GET', 'POST', 'DELETE'],
+  allowMethods: ['GET', 'POST', 'DELETE', 'PUT'],
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
 })
