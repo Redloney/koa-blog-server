@@ -3,8 +3,11 @@ const Router = require('koa-router')
 const app = new Koa()
 const router = new Router()
 const compose = require('koa-compose')
-const bodyParser = require('koa-bodyparser')
 
+const bodyParser = require('koa-bodyparser')
+const koabody = require('koa-body')
+
+// 服务器端口号
 const { PORT } = require('./src/config')
 
 // 静态文件夹 www
@@ -16,7 +19,7 @@ const middlewares = compose([bodyParser(), staticPath])
 // router config
 const routers = require('./src/router')
 // jwt config
-const jwtDeploy = require('./src/utils/jwt')
+const jwt = require('./src/utils/jwt')
 
 app
   .use(staticPath)
@@ -25,7 +28,7 @@ app
   .use(router.allowedMethods())
 
 routers.depoly(app)
-jwtDeploy.deploy(app)
+jwt.deploy(app)
 
 router.get('/', (ctx) => {
   ctx.body = {
