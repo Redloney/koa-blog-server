@@ -1,10 +1,6 @@
 const mongoose = reuqire('../db')
 const Schema = mongoose.Schema
 
-// const CommentSchema = new Schema({
-//   userinfo:{}
-// })
-
 const ArticleSchema = new Schema(
   {
     title: {

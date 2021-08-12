@@ -1,11 +1,9 @@
 const Router = require('koa-router')
 const router = new Router()
-const dayjs = require('dayjs')
-const jwt = require('jsonwebtoken')
 
-const UserModel = require('../db/method/user.js')
+const UserModel = require('../../db/method/user')
 
-const secret = 'redloeny-secret'
+const { produceToken, verifyToken } = require('../../utils/token')
 
 const checkUser = async (userinfo) => {
   const user = await UserModel.query(userinfo)
@@ -20,7 +18,7 @@ const getUser = async (userinfo) => {
 // 用户登录
 router.post('/api/user/login', async (ctx) => {
   // 获取用户数据
-  let userinfo = ctx.request.body
+  let userinfo = ctx.params
 
   // 判断用户是否存在
   const { nickname, email } = userinfo
@@ -53,7 +51,8 @@ router.post('/api/user/login', async (ctx) => {
 
   let { _id, avatar, gender, weburl, address } = userinfo
 
-  const payload = {
+  // 生成token令牌
+  const token = produceToken({
     _id,
     avatar,
     nickname,
@@ -61,15 +60,13 @@ router.post('/api/user/login', async (ctx) => {
     email,
     weburl,
     address,
-  }
+  })
 
-  // 生成token令牌
-  const token = jwt.sign(payload, secret, { expiresIn: '30m' })
   // 返回报文
   ctx.body = {
     code: 1,
     msg: '登录成功！',
-    warn: '此Token 30m 后过期哦~',
+    warn: '此Token 30m 后过期!',
     token,
   }
 })
@@ -78,29 +75,16 @@ router.post('/api/user/auth', (ctx) => {
   const bearerHeader = ctx.header.authorization
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ')
-    const token = bearer[1]
-    jwt.verify(token, secret, (err, payload) => {
-      if (err) {
-        ctx.body = {
-          code: 0,
-          err: {
-            ...err,
-            expiredAt: dayjs(err.expiredAt).format('YYYY-MM-DD - HH:MM:ss'),
-          },
-        }
-        return
-      } else {
-        ctx.body = {
-          code: 1,
-          msg: 'Post Created..',
-          payload,
-        }
-      }
-    })
+    const token = bearer[bearer.length - 1]
+
+    const verify = verifyToken(token)
+    ctx.body = {
+      ...verify,
+    }
   } else {
     ctx.body = {
       code: 0,
-      msg: 'Forbidden Token',
+      msg: '未得到Token授权 禁止访问！',
     }
   }
 })

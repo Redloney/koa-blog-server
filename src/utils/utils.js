@@ -1,6 +1,6 @@
 const FastScanner = require('fastscan')
 
-const words = ['fuck', 'bitch', 'sb', '傻逼', '垃圾', '操你妈', '艹']
+const words = ['fuck', 'bitch', 'sb', '傻逼', '垃圾', '操你妈', '艹', '废物']
 
 const scanner = new FastScanner(words)
 

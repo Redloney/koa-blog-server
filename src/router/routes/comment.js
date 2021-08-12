@@ -1,7 +1,7 @@
-const Comment = require('../db/method/comment')
-const User = require('../db/method/user')
+const Comment = require('../../db/method/comment')
+const User = require('../../db/method/user')
 const Router = require('koa-router')
-const filter = require('../utils/utils')
+const filter = require('../../utils/utils')
 
 const router = new Router()
 

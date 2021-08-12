@@ -1,4 +1,4 @@
-const Custom = async (ctx, next) => {
+const MapParams = async (ctx, next) => {
   ctx.params = {
     ...ctx.request.body,
     ...ctx.query,
@@ -6,4 +6,4 @@ const Custom = async (ctx, next) => {
   await next()
 }
 
-module.exports = Custom
+module.exports = MapParams

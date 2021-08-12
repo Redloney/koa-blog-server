@@ -1,7 +1,7 @@
 const koaRouter = require('koa-router')
 const router = new koaRouter()
 
-const UserLikeRecord = require('../db/method/user_like_record')
+const UserLikeRecord = require('../../db/method/user_like_record')
 
 router
   .get('/api/comment/user_like_records', async (ctx) => {

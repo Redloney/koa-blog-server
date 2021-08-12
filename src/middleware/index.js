@@ -10,20 +10,20 @@ const cros = require('./cros')
 // 中间件
 const koaBody = require('./koabody')
 const koaError = require('./koaError')
-const custom = require('./custom')
+const mapParams = require('./custom')
 const { jwtErrorHandler, koajwt } = require('./jwt')
-
+// 组合
 const compose = require('koa-compose')
 
 // 中间件集合
 const middlewares = compose([
   koaError,
   cros,
-  custom,
   koajwt,
   jwtErrorHandler,
   staticPath,
   koaBody,
+  mapParams,
 ])
 
 // 路由
