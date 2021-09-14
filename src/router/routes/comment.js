@@ -8,7 +8,7 @@ const router = new Router()
 router
 
   // 所有留言 包含被删除
-  .get('/api/comments', async (ctx) => {
+  .get('/comments', async (ctx) => {
     let { page, size, sorter, ...obj } = ctx.query
     const comments = await Comment.queryAll(obj, { page, size, sorter })
     const count = await Comment.countAll()
@@ -22,7 +22,7 @@ router
   })
 
   // 未被删除的所有留言
-  .get('/api/comment/list', async (ctx) => {
+  .get('/comment/list', async (ctx) => {
     let _id = ctx.cookies.get('userId')
     let { page, size, sorter, ...args } = ctx.query
     const comments = await Comment.query(args, { _id, page, size, sorter })
@@ -46,7 +46,7 @@ router
   })
 
   // 添加评论
-  .post('/api/comment/insert', async (ctx) => {
+  .post('/comment/insert', async (ctx) => {
     // 获取用户ID
     let _id = ctx.cookies.get('userId')
     if (!_id) {
@@ -75,6 +75,7 @@ router
     }
     // 获取用户信息
     const userinfo = await User.queryById(_id)
+    console.log(userinfo)
     // 评论信息
     const comm = { userinfo, content }
     // if (replyId) {
@@ -90,7 +91,7 @@ router
     }
   })
   // 删除评论
-  .post('/api/comment/delete', async (ctx) => {
+  .post('/comment/delete', async (ctx) => {
     let _id = ctx.cookies.get('userId')
     let { id, fId } = ctx.request.body
     // 如果登录了且有删除的目标

@@ -3,6 +3,7 @@ const Comment = require('../schema/comment')
 // 过滤字段
 const _filter = {
   __v: 0,
+  email: 0,
   del_status: 0,
   'children.del_status': 0,
 }
@@ -77,7 +78,13 @@ class CommentMethod {
         },
         {
           $project: {
-            userinfo: 1,
+            userinfo: {
+              avatar: 1,
+              nickname: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              _id: 1,
+            },
             content: 1,
             like_status: 1,
             like_number: 1,

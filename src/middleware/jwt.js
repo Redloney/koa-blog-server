@@ -15,7 +15,14 @@ const jwtErrorHandler = async (ctx, next) => {
 }
 
 // 不需要验证
-const path = [/^\/api\/user\/login/, /^\/api\/user\/validate/]
+const path = [
+  /^\/user\/login/,
+  /^\/user\/logout/,
+  /^\/user\/auth/,
+  /^\/upload/,
+  /^\/user\/validate/,
+  /^\/article\/insert/,
+]
 
 module.exports = {
   jwtErrorHandler,

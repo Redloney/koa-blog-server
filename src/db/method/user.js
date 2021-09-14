@@ -61,7 +61,7 @@ class UserMethod {
     })
   }
   count(obj) {
-    return new Promise(async (resolve, _reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const users = await User.find({ ...obj }, _filter)
         users && users.length ? resolve(users.length) : resolve(0)

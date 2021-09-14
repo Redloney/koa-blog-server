@@ -4,7 +4,7 @@ const router = new koaRouter()
 const UserLikeRecord = require('../../db/method/user_like_record')
 
 router
-  .get('/api/comment/user_like_records', async (ctx) => {
+  .get('/comment/user_like_records', async (ctx) => {
     // 获取用户Id
     // let _id = ctx.cookies.get('userId')
     // let { page, size, sorter, ...args } = ctx.query
@@ -14,7 +14,7 @@ router
       user_like_records,
     }
   })
-  .get('/api/comment/user_like_record_groups', async (ctx) => {
+  .get('/comment/user_like_record_groups', async (ctx) => {
     let _id = ctx.cookies.get('userId')
     const user_like_groups = await UserLikeRecord.queryByGroup(_id)
     ctx.body = {
@@ -22,7 +22,7 @@ router
       user_like_groups,
     }
   })
-  .get('/api/comment/user_like_record_tatal', async (ctx) => {
+  .get('/comment/user_like_record_tatal', async (ctx) => {
     let { target_id } = ctx.query
     const user_like_record_total = await UserLikeRecord.count(target_id)
     ctx.body = {
@@ -30,7 +30,7 @@ router
       user_like_record_total: user_like_record_total.length,
     }
   })
-  .post('/api/comment/user_like', async (ctx) => {
+  .post('/comment/user_like', async (ctx) => {
     // 获取用户ID
     let user_id = ctx.cookies.get('userId')
 
@@ -83,7 +83,7 @@ router
     }
   })
 // // 点赞评论
-// .post('/api/comment/thumb', async (ctx) => {
+// .post('/comment/thumb', async (ctx) => {
 //   // 1.获取当前用户id
 //   let _id = ctx.cookies.get('userId')
 //   if (!_id) {

@@ -3,6 +3,7 @@ const router = new Router()
 
 const routers = [
   require('./routes/comment'),
+  require('./routes/article'),
   require('./routes/user'),
   require('./routes/auth'),
   require('./routes/upload'),

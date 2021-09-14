@@ -16,9 +16,12 @@ const getUser = async (userinfo) => {
 }
 
 // 用户登录
-router.post('/api/user/login', async (ctx) => {
+router.post('/user/login', async (ctx) => {
+  
   // 获取用户数据
   let userinfo = ctx.params
+
+  console.log(userinfo)
 
   // 判断用户是否存在
   const { nickname, email } = userinfo
@@ -45,7 +48,10 @@ router.post('/api/user/login', async (ctx) => {
   } else {
     // => 重新创建
     const user = await UserModel.save(userinfo)
-
+    // 用户存在 id 存储 => cookies
+    ctx.cookies.set('userId', user['_id'], {
+      maxAge: 60 * 60 * 24 * 10000000,
+    })
     userinfo = user
   }
 
@@ -57,7 +63,6 @@ router.post('/api/user/login', async (ctx) => {
     avatar,
     nickname,
     gender,
-    email,
     weburl,
     address,
   })
@@ -71,13 +76,17 @@ router.post('/api/user/login', async (ctx) => {
   }
 })
 
-router.post('/api/user/auth', (ctx) => {
+router.post('/user/auth', (ctx) => {
   const bearerHeader = ctx.header.authorization
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ')
     const token = bearer[bearer.length - 1]
-
     const verify = verifyToken(token)
+    if (!verify.code == 0) {
+      ctx.cookies.set('userId', verify.payload._id, {
+        maxAge: 60 * 60 * 24 * 10000000,
+      })
+    }
     ctx.body = {
       ...verify,
     }
